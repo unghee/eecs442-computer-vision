@@ -1,5 +1,10 @@
 /HW1_files
-
+.DS_Store
+*.jpg
+*.png
+*.JPG
+*.gif
+/images
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

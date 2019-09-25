@@ -11,11 +11,18 @@ import imageio
 import cv2
 
 # image = plt.imread('../prokudin-gorskii/efros_tableau.jpg')
-image = plt.imread('../efros_tableau.jpg')
+# image = plt.imread('../efros_tableau.jpg')
+image = plt.imread('../HW1_files/prokudin-gorskii/00398v.jpg')
 
+h,w = image.shape
+
+h_ind =round(h/3)
+image1 = image[:h_ind,:]
+image2 = image[h_ind:2*h_ind,:]
+image3 = image[2*h_ind:3*h_ind,:]
 # image1 = image[20:338,22:380]
 #efros_tableau.jpg
-image1 = image[:421,:]
+# image1 = image[:421,:]
 
 #00125v.jpg
 # image1 =  np.roll(image1,-1, axis=1)# aligned
@@ -38,14 +45,14 @@ image1 = image[:421,:]
 # image1 =  np.roll(image1,14, axis=0)# aligned
 
 #efros_tableau.jpg
-image1 =  np.roll(image1,5, axis=1)# aligned
-image1 =  np.roll(image1,0, axis=0)# aligned
+# image1 =  np.roll(image1,5, axis=1)# aligned
+# image1 =  np.roll(image1,0, axis=0)# aligned
 
 image1_b = image1[:,:,None]
 
 # image2 = image[342+6:673-7,22:380]
 #efros_tableau.jpg
-image2 = image[421:842,:]
+# image2 = image[421:842,:]
 
 #00153v.jpg
 # image2 =  np.roll(image2,-2, axis=1) #aligned
@@ -69,14 +76,14 @@ image2 = image[421:842,:]
 # image2 =  np.roll(image2,1, axis=0) #aligned up down
 
 #efros_tableau.jpg
-image2 =  np.roll(image2,10, axis=1) #aligned
-image2 =  np.roll(image2,0, axis=0) #aligned up down
+# image2 =  np.roll(image2,10, axis=1) #aligned
+# image2 =  np.roll(image2,0, axis=0) #aligned up down
 
 image2_g = image2[:,:,None]
 
 # image3 = image[682+1:1002-1,22:380]
 #efros_tableau.jpg
-image3 = image[842:1264,:]
+# image3 = image[842:1264,:]
 
 image3_r = image3[:,:,None]
 
