@@ -1,2 +1,0 @@
-127,183,110,192
-img1 on cool light condition, img2 on warm light condition. 

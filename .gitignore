@@ -1,5 +1,6 @@
 /HW1_files
-.DS_Store
+*.zip
+*.DS_Store
 *.jpg
 *.png
 *.JPG
