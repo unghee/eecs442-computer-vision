@@ -37,6 +37,7 @@ Load the images and plot their R, G, B channels separately as grayscale images u
 </p>
 
 # [HW2](https://web.eecs.umich.edu/~fouhey/teaching/EECS442_F19/resources/HW2.pdf)
+code coming up
 ## 1. Image Filtering 
 In this first section, you will explore different ways to filter images. Through these tasks you will build
 up a toolkit of image filtering techniques. By the end of this problem, you should understand how the
@@ -61,3 +62,9 @@ task can be very time consuming as well as error-prone. During this course, you 
 algorithms that can be used to detect, segment, or even classify cells in those settings. In this part of the
 assignment, you will use the DoG filters implemented in part 1 along with a scale-space representation to
 count the number of cells in a microscopy images
+
+<img src= "https://github.com/unghee/eecs442-computer-vision/blob/master/hw2_submission/images/Capture.PNG">
+
+## HW 3,4,5,6
+Coming Soon
+Topics covered : RANSAC, Image stiching, CNN, Image Classification
