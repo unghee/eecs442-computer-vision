@@ -5,8 +5,8 @@
 ## 1.  Camera projection Matrix 
 plot the resulting view of the cube from rotation transformations  
 Implement an orthographic camera 
-<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/problem1_c.png" width ="100">
-<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/ortho.png width ="100">
+<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/problem1_c.png" width ="600">
+<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/ortho.png" width ="600">
 ## 2. Prokudin-Gorskii: Color from grayscale photographs 
 Implementing the dream of Russian photographer, Sergei Mikhailovich
 Prokudin-Gorskii (1863-1944), via a project invented by Russian-American vision researcher, Alexei A.
@@ -18,7 +18,7 @@ color filter in front of the camera. His hope was that you, as a student in the 
 produce beautiful color images by combining his 3 separate, filtered images.
 
 
-Before:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/prokudin-gorskii/00125v.jpg)
+![before](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/prokudin-gorskii/00125v.jpg)
 After:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/00125vstacked_alinged.jpg)
 Before:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/prokudin-gorskii/00153v.jpg)
 After:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/00153vstacked_alinged.jpg)
