@@ -35,3 +35,29 @@ Load the images and plot their R, G, B channels separately as grayscale images u
 <img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/outdoor.png" >
 <img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/task3_1_outdoor_lab.png" >
 </p>
+
+# [HW2](https://web.eecs.umich.edu/~fouhey/teaching/EECS442_F19/resources/HW2.pdf)
+## 1. Image Filtering 
+In this first section, you will explore different ways to filter images. Through these tasks you will build
+up a toolkit of image filtering techniques. By the end of this problem, you should understand how the
+development of image filtering techniques has led to convolution
+
+## 2. Feature Extraction
+While edges can be useful, corners are often more informative features as they are less common. In this
+section, we implement a Harris Corner Detector (see: https://en.wikipedia.org/wiki/Harris Corner Detector)
+to detect corners. Corners are defined as locations (x, y) in the image where a small change any direction
+results in a large change in intensity if one considers a small window centered on (x, y) (or, intuitively,
+one can imagine looking at the image through a tiny hole that’s centered at (x, y)). This can be contrasted
+with edges where a large intensity change occurs in only one direction, or flat regions where moving in any
+direction will result in small or no intensity changes. Hence, the Harris Corner Detector considers small
+windows (or patches) where a small change in location leads large variation in multiple directions (hence
+corner detector)
+
+## 3. Blob Detection
+One of the great benefits of computer vision is that it can greatly simplify and automate otherwise tedious
+tasks. For example, in some branches of biomedical research, researchers often have to count or annotate
+specific particles microscopic images such as the one seen below. Aside from being a very tedious task, this
+task can be very time consuming as well as error-prone. During this course, you will learn about several
+algorithms that can be used to detect, segment, or even classify cells in those settings. In this part of the
+assignment, you will use the DoG filters implemented in part 1 along with a scale-space representation to
+count the number of cells in a microscopy images
