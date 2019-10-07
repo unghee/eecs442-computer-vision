@@ -7,8 +7,7 @@ plot the resulting view of the cube from rotation transformations
 Implement an orthographic camera 
 
 
-<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/problem1_c.png" width ="400">
-<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/ortho.png" width ="400">
+<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/problem1_c.png" width ="400"><img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/ortho.png" width ="400">
 ## 2. Prokudin-Gorskii: Color from grayscale photographs 
 Implementing the dream of Russian photographer, Sergei Mikhailovich
 Prokudin-Gorskii (1863-1944), via a project invented by Russian-American vision researcher, Alexei A.
