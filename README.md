@@ -5,7 +5,8 @@
 ## 1.  Camera projection Matrix 
 plot the resulting view of the cube from rotation transformations  
 Implement an orthographic camera 
-
+![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/problem1_c.png)
+![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/ortho.png)
 ## 2. Prokudin-Gorskii: Color from grayscale photographs 
 Implementing the dream of Russian photographer, Sergei Mikhailovich
 Prokudin-Gorskii (1863-1944), via a project invented by Russian-American vision researcher, Alexei A.
@@ -15,7 +16,10 @@ through custom color filters at the whim of the czar. To capture color for the p
 he decided to take three separate black-and-white pictures of every scene, each with a red, green, or blue
 color filter in front of the camera. His hope was that you, as a student in the future, would come along and
 produce beautiful color images by combining his 3 separate, filtered images.
-
+Before:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/prokudin-gorskii/00125v.jpg)
+After:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/00125vstacked_alinged.jpg)
+Before:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/prokudin-gorskii/00153v.jpg)
+After:![alt text](https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/00153vstacked_alinged.jpg)
 ## 3. Color Spaces and illuminance
 
 The same color may look different under different lighting conditions. Images indoor.png and outdoor.png
