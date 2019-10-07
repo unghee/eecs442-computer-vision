@@ -66,5 +66,6 @@ count the number of cells in a microscopy images
 <img src= "https://github.com/unghee/eecs442-computer-vision/blob/master/hw2_submission/images/Capture.PNG">
 
 ## HW 3,4,5,6
-Coming Soon
-Topics covered : RANSAC, Image stiching, CNN, Image Classification
+Coming Soon  
+---
+Covered Topics will be : RANSAC, Image stiching, CNN, Image Classification
