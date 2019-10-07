@@ -1,11 +1,10 @@
 /HW1_files
 *.zip
 *.DS_Store
-*.jpg
-*.png
-*.JPG
+warm.JPG
+cool.JPG
 *.gif
-/images
+#/images
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
