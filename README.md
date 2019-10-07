@@ -31,5 +31,5 @@ are two photos of a same Rubik’s cube under different illuminances
 Load the images and plot their R, G, B channels separately as grayscale images using plt.imshow()
 (beware of normalization). Then convert them into LAB color space.
 
-<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/outdoor.png">
-<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/task3_1_outdoor_lab.png">
+<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/HW1_files/outdoor.png" class="center">
+<img src="https://github.com/unghee/eecs442-computer-vision/blob/master/hw1_submission/images/task3_1_outdoor_lab.png" class="center">
