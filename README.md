@@ -9,8 +9,8 @@ Implement an orthographic camera
 ## 2. Prokudin-Gorskii: Color from grayscale photographs 
 Implementing the dream of Russian photographer, Sergei Mikhailovich
 Prokudin-Gorskii (1863-1944), via a project invented by Russian-American vision researcher, Alexei A.
-Efros (1975-present)1
-. Sergei was a visionary who believed in a future with color photography (which
+Efros (1975-present).
+Sergei was a visionary who believed in a future with color photography (which
 we now take for granted). During his lifetime, he traveled across the Russian Empire taking photographs
 through custom color filters at the whim of the czar. To capture color for the photographers of the future,
 he decided to take three separate black-and-white pictures of every scene, each with a red, green, or blue
