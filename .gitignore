@@ -5,6 +5,8 @@ warm.JPG
 cool.JPG
 *.gif
 #/images
+*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
