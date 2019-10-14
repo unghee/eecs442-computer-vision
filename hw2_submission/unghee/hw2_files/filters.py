@@ -37,11 +37,27 @@ def convolve(image, kernel):
     # Output- convolve: H x W
     image = image*1.0 # change to float
     shape_image = np.shape(image)
-    padded_image = np.zeros((shape_image[0]+2,shape_image[1]+2))
-    padded_image_shape = np.shape(padded_image)
-    padded_image[1:-1,1:-1] = image
-
     shape_kernel = np.shape(kernel)
+    padded_image = np.zeros((shape_image[0]+shape_kernel[0]-1,shape_image[1]+shape_kernel[1]-1))
+    padded_image_shape = np.shape(padded_image)
+    # padded_image[1:-1,1:-1] = image
+    # pad = lambda s: None if s is 1 else int(s/2)
+    pad = lambda s: int(s/2)
+    if pad(shape_kernel[0]) == 0 and pad(shape_kernel[1]) != 0:
+        padded_image[:,pad(shape_kernel[1]):-pad(shape_kernel[1])] = image
+
+    elif pad(shape_kernel[0]) != 0  and pad(shape_kernel[1]) ==0 :
+        padded_image[pad(shape_kernel[0]):-pad(shape_kernel[0]),:] = image
+
+    elif pad(shape_kernel[0]) != 0  and pad(shape_kernel[1]) != 0 :
+        padded_image[pad(shape_kernel[0]):-pad(shape_kernel[0]),pad(shape_kernel[1]):-pad(shape_kernel[1])] = image
+
+    else:
+        padded_image = image
+
+
+
+   
     kernel = np.flipud(np.fliplr(kernel))
     output = np.zeros(shape_image)
 
@@ -227,9 +243,11 @@ def main():
         [0, 0, 3, 2, 2, 2, 3, 0, 0]
     ])
     filtered_LoG1 = convolve(img, kernel_LoG1)
-    save_img(filtered_LoG1, "./log_filter/q1_LoG1.png")
+    # save_img(filtered_LoG1, "./log_filter/q1_LoG1.png")
+    save_fig(filtered_LoG1, "./log_filter/q1_LoG1.png")
     filtered_LoG2 = convolve(img, kernel_LoG2)
-    save_img(filtered_LoG2, "./log_filter/q1_LoG2.png")
+    # save_img(filtered_LoG2, "./log_filter/q1_LoG2.png")
+    save_fig(filtered_LoG2, "./log_filter/q1_LoG2.png")
 
     # Q2: No code
 

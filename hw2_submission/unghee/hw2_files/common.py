@@ -22,9 +22,9 @@ def display_img(img):
     plt.show()
 
 def save_fig(img,path):
-    fig, axs = plt.subplots(1,1,figsize=(9, 3),dpi=350)
+    fig, axs = plt.subplots(1,1,figsize=(6, 2),dpi=400)
     axs.imshow(img, cmap='gray')
     plt.axis('off')
     plt.autoscale(tight=True)
-    fig.savefig(path)
+    fig.savefig(path,pad_inches=0,bbox_inches='tight')
     print(path, "is saved!")
