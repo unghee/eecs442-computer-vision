@@ -164,8 +164,6 @@ def main():
     ## -- TODO Implement scale_space() and try to find both polka dots 
 
     min_sig = 6
-    # k = np.sqrt(2)
-    # k =1.4378
     k = 1.44
     spaces=scale_space(image,min_sig,k,8)
     maxima = find_maxima(spaces, k_xy=13,k_s=3)
@@ -173,6 +171,17 @@ def main():
     visualize_maxima(image, maxima, min_sig, k, 'polka_small2large.png')
 
     ## -- TODO Try to find the cells in any of the cell images in vgg_cells 
+
+    image = read_img('cells/001cell.png')
+
+    image = -1.0*image
+    min_sig = 2.3
+    k = 1.12
+    spaces=scale_space(image,min_sig,k,8)
+    maxima = find_maxima(spaces, k_xy=17,k_s=5)
+    visualize_scale_space(spaces, min_sig, k, 'cell_scale_space.png')
+    visualize_maxima(image, maxima, min_sig, k, 'cell_number.png')
+    print(len(maxima))
 
 
 if __name__ == '__main__':

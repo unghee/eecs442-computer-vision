@@ -106,8 +106,8 @@ def main():
     # define offsets and window size and calulcate corner score
     u, v, W = 0, -5, (5,5)
     
-    # score = corner_score(img, u, v, W)
-    # save_fig(score, "./feature_detection/corner_score.png")
+    score = corner_score(img, u, v, W)
+    save_fig(score, "./feature_detection/corner_score.png")
 
     harris_corners = harris_detector(img)
     save_fig(harris_corners, "./feature_detection/harris_response.png")
