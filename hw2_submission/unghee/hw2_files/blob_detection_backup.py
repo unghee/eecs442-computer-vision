@@ -1,8 +1,8 @@
 from common import * 
 import matplotlib.pyplot as plt
 import numpy as np 
-from scipy import signal
 import math
+from scipy import signal
 
 def gaussian_filter(image, sigma):
     # Given an image, apply a Gaussian filter with the input kernel size
@@ -10,7 +10,6 @@ def gaussian_filter(image, sigma):
     # Input-    image: image of size HxW
     #           sigma: scalar standard deviation of Gaussian Kernel
     # Output-   Gaussian filtered image of size HxW
-    image = image*1.0
     H, W = image.shape
     # -- good heuristic way of setting kernel size 
     kernel_size = int(2 * np.ceil(2*sigma) + 1)
@@ -21,17 +20,14 @@ def gaussian_filter(image, sigma):
 
     #TODO implement gaussian filtering with size kernel_size x kernel_size 
     # feel free to use your implemented convolution function or a convolution function from a library 
-    kernel = np.zeros((kernel_size,kernel_size))
-    for i in range(-int(kernel_size/2),int(kernel_size/2)):
-    	for j in range(-int(kernel_size/2),int(kernel_size/2)):
-    		kernel[j][i] = (1/(2*math.pi*sigma*sigma))*np.exp(-(i**2+j**2)/(2*sigma*sigma))
 
-    kernel = kernel*1.0
-    # kernel = kernel/np.sum(kernel)
+    kernel = np.zeros((kernel_size,kernel_size))
+    for i in range(kernel_size):
+    	for j in range(kernel_size):
+    		kernel[j][i] = 1/(2*np.pi*sigma**2)*np.exp(-(i**2+j**2)/(2*sigma**2))
     output = signal.convolve2d(image, kernel, boundary='symm', mode='same')	
 
-
-    return output 
+    return output
 
 def scale_space(image, min_sigma, k=np.sqrt(2), S=8):
     # Calcualtes a DoG scale space of the image
@@ -40,17 +36,7 @@ def scale_space(image, min_sigma, k=np.sqrt(2), S=8):
     #           k: scalar multiplier for scale space
     #           S: number of scales considers
     # Output-   Scale Space of size HxWx(S-1)
-
-    image_shape = np.shape(image)
-    output = np.zeros((image_shape[0],image_shape[1],S-1))
-
-    for i in range(S-1):
-    	gauss_2 = gaussian_filter(image,min_sigma*k**(i+1))
-    	gauss_1 = gaussian_filter(image,min_sigma*k**(i))
-
-    	output[:,:,i] = gauss_2-gauss_1
-
-    return output
+    pass
 
 
 ##### You shouldn't need to edit the following 3 functions 
@@ -127,7 +113,6 @@ def visualize_maxima(image, maxima, min_sigma, k, file_path=None):
 
 def main():
     image = read_img('polka.png')
-    image = image*1.0
 
     ### -- Detecting Polka Dots -- ## 
     print("Detect small polka dots")
@@ -137,7 +122,7 @@ def main():
     gauss_2 = gaussian_filter(image,sigma_2)
 
     # calculate difference of gaussians
-    DoG_small = gauss_2-gauss_1
+    DoG_small = gauss_2 - gauss_1
 
     # visualize maxima 
     maxima = find_maxima(DoG_small, k_xy=int(sigma_1))
@@ -146,8 +131,7 @@ def main():
     
     # -- Detect Large Circles
     print("Detect large polka dots")
-    # sigma_1, sigma_2 = 45, 50
-    sigma_1, sigma_2 = 55, 58
+    sigma_1, sigma_2 = 50, 100
     gauss_1 = gaussian_filter(image,sigma_1)
     gauss_2 = gaussian_filter(image,sigma_2)
 
@@ -163,14 +147,6 @@ def main():
 
     ## -- TODO Implement scale_space() and try to find both polka dots 
 
-    min_sig = 6
-    # k = np.sqrt(2)
-    # k =1.4378
-    k = 1.44
-    spaces=scale_space(image,min_sig,k,8)
-    maxima = find_maxima(spaces, k_xy=13,k_s=3)
-    visualize_scale_space(spaces, min_sig, k, 'polka_scale_space.png')
-    visualize_maxima(image, maxima, min_sig, k, 'polka_small2large.png')
 
     ## -- TODO Try to find the cells in any of the cell images in vgg_cells 
 

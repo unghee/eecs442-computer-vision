@@ -2,7 +2,7 @@ import numpy as np
 import os
 from common import *
 import math
-
+from blob_detection import *
 
 ## Image Patches ##
 def image_patches(image, patch_size=(16,16)):
@@ -135,11 +135,12 @@ def steerable_filter(image, angles=[0, np.pi/6, np.pi/3, np.pi/2, np.pi*2/3, np.
 def gauss(m,n,sig):
     ker=np.zeros((m,n))
 
-    for i in range(ker.shape[1]):
-        for j in range(ker.shape[0]):
+    for i in range(-int(ker.shape[1]/2),int(ker.shape[1]/2)):
+        for j in range(-int(ker.shape[0]/2),int(ker.shape[0]/2)):
             ker[j][i] = 1/(2*math.pi*sig**2)*np.exp(-(i**2+j**2)/(2*sig**2))
 
-    ker = ker/np.sum(ker)
+    # ker=ker-ker[int(m/2),int(n/2)]
+    # ker = ker/np.sum(ker)
 
     return ker
 
@@ -157,9 +158,9 @@ def main():
     patches = image_patches(img)
     # TODO choose a few patches and save them
     chosen_patches = patches[5]
-    chosen_patches = chosen_patches.astype(np.uint8)
+    # chosen_patches = chosen_patches.astype(np.uint8)
 
-    save_img(chosen_patches, "./image_patches/q1_patch.png")
+    save_fig(chosen_patches, "./image_patches/q1_patch.png")
 
     # Q2: No code
 
@@ -177,7 +178,7 @@ def main():
     # kernel_gaussian = gauss(3,3,10)
 
     filtered_gaussian = convolve(img, kernel_gaussian)
-    filtered_gaussian = filtered_gaussian.astype(np.uint8)
+    # filtered_gaussian = filtered_gaussian.astype(np.uint8)
     # display_img(filtered_gaussian)
 
     fig, axs = plt.subplots(1,1,figsize=(9, 3),dpi=350)
@@ -187,12 +188,12 @@ def main():
 
     # Q3
     edge_detect, _, _ = edge_detection(img)
-    edge_detect = edge_detect.astype(np.uint8)
-    save_img(edge_detect, "./gaussian_filter/q3_edge.png")
+    # edge_detect = edge_detect.astype(np.uint8)
+    save_fig(edge_detect, "./gaussian_filter/q3_edge.png")
     edge_with_gaussian, _, _ = edge_detection(filtered_gaussian)
-    edge_with_gaussian = edge_with_gaussian.astype(np.uint8)
+    # edge_with_gaussian = edge_with_gaussian.astype(np.uint8)
     # display_img(edge_with_gaussian)
-    save_img(edge_with_gaussian, "./gaussian_filter/q3_edge_gaussian.png")
+    save_fig(edge_with_gaussian, "./gaussian_filter/q3_edge_gaussian.png")
 
     print("Gaussian Filter is done. ")
     ########################
@@ -249,7 +250,16 @@ def main():
     # save_img(filtered_LoG2, "./log_filter/q1_LoG2.png")
     save_fig(filtered_LoG2, "./log_filter/q1_LoG2.png")
 
-    # Q2: No code
+    # # Q2: No code
+
+    sigma_1, sigma_2 = 1, 1.02
+    gauss_1 = gaussian_filter(img,sigma_1)
+    gauss_2 = gaussian_filter(img,sigma_2)
+
+    # calculate difference of gaussians
+    DoG_small = gauss_2-gauss_1
+    save_fig(DoG_small, "./log_filter/q2_DoG.png")
+
 
     print("LoG Filter is done. ")
     ########################

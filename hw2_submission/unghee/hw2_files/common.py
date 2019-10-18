@@ -23,7 +23,9 @@ def display_img(img):
 
 def save_fig(img,path):
     fig, axs = plt.subplots(1,1,figsize=(6, 2),dpi=400)
-    axs.imshow(img, cmap='gray')
+    
+    pos=axs.imshow(img,cmap='gray')
+    fig.colorbar(pos, ax=axs)
     plt.axis('off')
     plt.autoscale(tight=True)
     fig.savefig(path,pad_inches=0,bbox_inches='tight')
