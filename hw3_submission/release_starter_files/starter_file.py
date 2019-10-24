@@ -38,9 +38,6 @@ def fit_homography(XY):
         y_prime = XY[i,3]
         x_prime = XY[i,2]
 
-        # line1=np.concatenate((np.zeros(3),-XN,y_prime*XN))
-        # line2=np.concatenate((XN, np.zeros(3),-x_prime*XN))
-
         line1 = np.concatenate((XN, np.zeros(3),-x_prime*XN))
         line2 = np.concatenate((np.zeros(3),-XN,y_prime*XN))
 
@@ -165,7 +162,7 @@ def stitchimage(imgleft, imgright):
     XY_train = np.asarray([kp2[matches[i].trainIdx].pt for i in range(len(matches))])
 
     sampled_stack = np.zeros((1,4))
-    numTrials = 100
+    numTrials = 50
 
     bestLine, bestCount = None, -1 
 
@@ -214,8 +211,6 @@ def stitchimage(imgleft, imgright):
 
     height, width, channel = imgright.shape
 
-    # (H_cv, status) = cv2.findHomography(XY_query , XY_train, cv2.RANSAC,4.0)
-
     # im1Reg = cv2.warpPerspective(imgleft, Ht.dot(bestLine), (width+t[0], height))
     im1Reg = cv2.warpPerspective(imgleft, bestLine, (width, height))
 
@@ -232,16 +227,11 @@ def stitchimage(imgleft, imgright):
 
     alpha = 0.5
     beta = (1.0 - alpha)
-    # dst = cv2.addWeighted(im1Reg, alpha, imgright, beta, 0.0)
     dst = np.uint8(alpha*(im1Reg)+beta*(imgright))
     plt.imshow( dst), plt.show()
 
     # 5. combine two images, use average of them
     #    in the overlap area
-
-
-    # Draw first 10 matches.
-    # img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10], flags=2)
 
     return bestLine, dst
 
@@ -288,11 +278,11 @@ def transform_img(imgbase,img,mat):
 
 if __name__ == "__main__":
     # Problem 1
-    p1();
+    # p1();
 
     # Problem 2
     # p2('p2/uttower_left.jpg', 'p2/uttower_right.jpg', 'uttower')
-    p2('p2/bbb_left.jpg', 'p2/bbb_right.jpg', 'bbb')
+    # p2('p2/bbb_left.jpg', 'p2/bbb_right.jpg', 'bbb')
 
     # Problem 3
     # TODO
