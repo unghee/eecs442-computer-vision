@@ -117,6 +117,7 @@ def p1():
         plt.close()
 
 
+
 def stitchimage(imgleft, imgright):
     # TODO
     # 1. extract descriptors from images
@@ -128,18 +129,15 @@ def stitchimage(imgleft, imgright):
     imgleft_surf = cv2.drawKeypoints(imgleft,kp1,None,(255,0,0),4)
     imgright_surf = cv2.drawKeypoints(imgright,kp2,None,(255,0,0),4)
     save_img('uttower_left_grey_surf.jpg',imgleft_surf)
-    save_img('uttower_left_grey_surf.jpg',imgright_surf)
+    save_img('uttower_right_grey_surf.jpg',imgright_surf)
 
     des1 = (des1 - np.mean(des1))/des1.std(axis=0)
     des2 = (des2 - np.mean(des2))/des2.std(axis=0)
 
     pairs = []
     matches =[]
-    # dmatch=cv2.DMatch()
-    # for i in range(len(des1)):
 
-
-    for i in range(800):
+    for i in range(len(des2)):
         oldDist =10000
         for j in range(len(des1)):
             dist = np.linalg.norm(des1[j]-des2[i])
@@ -152,50 +150,28 @@ def stitchimage(imgleft, imgright):
                 if dist < secondsmallest:
                     secondsmallest = dist
 
-
-        # pairs.append(pairs_smallest)
         if oldDist/secondsmallest < 0.75:
             matches.append(cv2.DMatch(pairs_smallest[0],pairs_smallest[1],oldDist))
 
 
-
-
-    # for i in len(pairs):
-    #     dmatch = cv2.DMatch(int(pairs[i][0],pairs[i][1])
-
-
-
-    # bf = cv2.BFMatcher()
-    # matches = bf.knnMatch(des1,des2, k=2)
-    # bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-
-
-    # bf = cv2.BFMatcher()
-    # matches = bf.match(des1,des2)
     matches = sorted(matches, key = lambda x:x.distance)
-    # img3 = cv2.drawMatches(imgleft_surf ,kp1,imgright_surf,kp2,matches[:10], None, flags=2)
-    # plt.imshow(img3),plt.show()
 
     # 2. select paired descriptors
 
     # 3. run RANSAC to find a transformation
     #    matrix which has most innerliers
 
-
-    # XY_query=np.asarray([kp.pt for kp in kp1])
-    # XY_train=np.asarray([kp.pt for kp in kp2])
-
     XY_query = np.asarray([kp1[matches[i].queryIdx].pt for i in range(len(matches))])
     XY_train = np.asarray([kp2[matches[i].trainIdx].pt for i in range(len(matches))])
 
     sampled_stack = np.zeros((1,4))
-    numTrials = 70
+    numTrials = 100
 
     bestLine, bestCount = None, -1 
 
     inliers_matches =[]
     for trial in range(numTrials):
-        rand_matches=np.random.choice(matches,40)
+        rand_matches=np.random.choice(matches,5)
 
         for i in range(len(rand_matches)):
             kps=[kp1[rand_matches[i].queryIdx].pt,kp2[rand_matches[i].trainIdx].pt]
@@ -207,15 +183,6 @@ def stitchimage(imgleft, imgright):
         
         H=fit_homography(sampled_stack)
 
-
-        # XY_H = homography_transform(XY_query[:,:2], H)
-        # XY_H = XY_H[:,:2]
-
-        # E = np.linalg.norm(XY_train-XY_H[:len(XY_train)],axis=1)
-
-        # # inliers_query = XY_query[E<30]
-        # inliers_train = XY_train[E<30]
-        # # get the corresponding matches of kp1
         XY_H = homography_transform(XY_query, H)
         XY_H = XY_H[:,:2]
         E = np.linalg.norm(XY_train-XY_H,axis=1)
@@ -223,28 +190,17 @@ def stitchimage(imgleft, imgright):
         matches = np.asarray(matches)
         matches_inliers = matches[E<30]
 
-
-        # idx_matches = np.where(E<30)
-        # get index
         numb_inliers = len(inliers)
         if numb_inliers > bestCount:
-            bestLine, bestCount, residual, best_inliers = H, numb_inliers, E**2, matches_inliers
-
-
-
-            # for i in range(len(inliers)):
-            #     inliers_matches.append(cv2.DMatch(inliers_query[i],inlers_train[i]))
+            residual =np.sum(E*E)/bestCount
+            bestLine, bestCount, best_inliers = H, numb_inliers, matches_inliers
 
 
     img3 = cv2.drawMatches(imgleft_surf ,kp1,imgright_surf,kp2,best_inliers, None, flags=2)
     plt.imshow(img3),plt.show()
+    save_img('matches.jpg',img3)
 
-
-
-
-
-
-
+    print('numb_inliers',bestCount,'residual',residual)
 
     # 4. warp one image by your transformation 
     #    matrix
@@ -253,28 +209,41 @@ def stitchimage(imgleft, imgright):
     #    a. you can use opencv to warp image
     #    b. Be careful about final image size
 
-    height, width, channels = imgright_surf.shape
-    im1Reg = cv2.warpPerspective(imgleft_surf, bestLine, (width, height))
+    # t = [0,0]
+    # Ht = np.array([[1,0,t[0]],[0,1,t[1]],[0,0,1]])
+
+    height, width, channel = imgright.shape
+
+    # (H_cv, status) = cv2.findHomography(XY_query , XY_train, cv2.RANSAC,4.0)
+
+    # im1Reg = cv2.warpPerspective(imgleft, Ht.dot(bestLine), (width+t[0], height))
+    im1Reg = cv2.warpPerspective(imgleft, bestLine, (width, height))
+
+    im1Reg = im1Reg.astype(np.uint8)
+    # im1Reg= cv2.cvtColor(im1Reg, cv2.COLOR_BGR2GRAY)
+
+
+    plt.imshow(im1Reg),plt.show()
+    save_img('warped.jpg',im1Reg)
+
+    # im1Reg[t[1]:height+t[1],t[0]:width+t[0]] = imgright
     plt.imshow(im1Reg),plt.show()
 
-    alpha = 0.06
+
+    alpha = 0.5
     beta = (1.0 - alpha)
-    dst = cv2.addWeighted(im1Reg, alpha, imgright_surf, beta, 0.0)
-    dst = np.uint8(alpha*(im1Reg)+beta*(imgright_surf))
+    # dst = cv2.addWeighted(im1Reg, alpha, imgright, beta, 0.0)
+    dst = np.uint8(alpha*(im1Reg)+beta*(imgright))
     plt.imshow( dst), plt.show()
 
     # 5. combine two images, use average of them
     #    in the overlap area
 
 
-
-
-
-
     # Draw first 10 matches.
     # img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10], flags=2)
 
-    return bestLine
+    return bestLine, dst
 
 
 def p2(p1, p2, savename):
@@ -282,47 +251,23 @@ def p2(p1, p2, savename):
     imgleft = read_colorimg(p1)
     imgright = read_colorimg(p2)
 
-    # imgleft= cv2.cvtColor(imgleft, cv2.COLOR_BGR2GRAY)
-    # imgright= cv2.cvtColor(imgright, cv2.COLOR_BGR2GRAY)
-    # imgleft= cv2.cvtColor(imgleft, cv2.COLOR_BGR2RGB)
-    # imgright= cv2.cvtColor(imgright, cv2.COLOR_BGR2RGB)
-
-    # imgleft = imgleft*1.0
-    # imgright = imgright*1.0
-
     imgleft = imgleft.astype(np.uint8)
     imgright = imgright.astype(np.uint8)
 
-    # imgleft_grey = read_img(p1)
-    # imgright_grey = read_img(p2)
+    # imgleft= cv2.cvtColor(imgleft, cv2.COLOR_BGR2RGB)
+    # imgright= cv2.cvtColor(imgright, cv2.COLOR_BGR2RGB)
 
-    # imgleft_grey = 1.0*imgleft_grey
-    # imgright_grey = 1.0*imgright_grey
+    # imgleft= cv2.cvtColor(imgleft, cv2.COLOR_BGR2GRAY)
+    # imgright= cv2.cvtColor(imgright, cv2.COLOR_BGR2GRAY)
 
-    save_fig('uttower_left_grey.jpg',imgleft)
-    save_fig('uttower_right_grey.jpg',imgright)
-
-    # surf = cv2.SURF(400)
-
-    # kp, des = surf.detectAndCompute(imgleft_grey,None)
-
-    # imgleft_grey_surf = cv2.drawKeypoints(imgleft_grey,kp,None,(255,0,0),4)
-    # save_img('uttower_left_grey_surf.jpg',imgleft_grey_surf)
-
-
-
-    # imgleft = imgleft*1.0
-    # imgleft = cv2.cvtColor(imgleft, cv2.COLOR_BGR2RGB)
-    # plt.imshow(imgleft,cmap='gray')
-    # plt.show()
-
-
+    save_img('left.jpg',imgleft)
+    save_img('right.jpg',imgright)
 
     # stitch image
-    output = stitchimage(imgleft, imgright)
-    # output = stitchimage(imgleft_grey, imgright_grey)
+    H, output = stitchimage(imgleft, imgright)
+
     # save stitched image
-    save_img('./' + savename + '.jpg', output)
+    save_img( savename + '.jpg', output)
 
 
 def transform_img(imgbase,img,mat):
@@ -343,11 +288,11 @@ def transform_img(imgbase,img,mat):
 
 if __name__ == "__main__":
     # Problem 1
-    # p1();
+    p1();
 
     # Problem 2
     # p2('p2/uttower_left.jpg', 'p2/uttower_right.jpg', 'uttower')
-    # p2('p2/bbb_left.jpg', 'p2/bbb_right.jpg', 'bbb')
+    p2('p2/bbb_left.jpg', 'p2/bbb_right.jpg', 'bbb')
 
     # Problem 3
     # TODO
@@ -363,46 +308,27 @@ if __name__ == "__main__":
     imgright = read_colorimg('M.png')
     imgside= read_colorimg('bbb_side.png')
 
-    # imgleft= cv2.cvtColor(imgleft, cv2.COLOR_BGR2GRAY)
-    # imgright= cv2.cvtColor(imgright, cv2.COLOR_BGR2GRAY)
     imgleft= cv2.cvtColor(imgleft, cv2.COLOR_BGR2RGB)
     imgright= cv2.cvtColor(imgright, cv2.COLOR_BGR2RGB)
     imgside= cv2.cvtColor(imgside, cv2.COLOR_BGR2RGB)
-
-    # imgleft = imgleft*1.0
-    # imgright = imgright*1.0
 
     imgleft = imgleft.astype(np.uint8)
     imgright = imgright.astype(np.uint8)
     imgside = imgside.astype(np.uint8)
 
     img_shape = np.shape(imgright)
-
     imgleft = imgleft[:-2,:,:]
 
-    # img_ov= np.zeros(img_shape)
-    # for i in range(img_shape[0]):
-    #     for j in range(img_shape[1]):
-    #         xy = [[i],[j],[1]]
-    #         # xy=np.asarray(xy)
-    #         # xy = 
-    #         xy_scaled = np.matmul(scale_matrix,xy) 
-
-    #         xy_scaled=xy_scaled/xy_scaled[2][0]
-    #         if int(xy_scaled[0][0])<img_shape[1] and int(xy_scaled[1][0])<img_shape[0]:
-    #             img_ov[int(xy_scaled[0][0]),int(xy_scaled[1][0])] = imgright[i,j]
 
     img_ov = transform_img(imgleft,imgright,scale_matrix)
-    # imgright = scale_matrix*imgright
+
 
     img_ov = img_ov.astype(np.uint8)
     alpha = 0.7
     beta = (1.0 - alpha)
     dst = cv2.addWeighted(imgleft, alpha, img_ov, beta, 0.0)
     dst = np.uint8(alpha*(imgleft)+beta*(img_ov))
-    # plt.imshow( dst), plt.show()
-    # dst= cv2.cvtColor(dst, cv2.COLOR_BGR2RGB)
-
+ 
     save_fig('./' + 'bbb_front_ov' + '.jpg', dst)
 
 
@@ -413,41 +339,11 @@ if __name__ == "__main__":
     imrightReg = cv2.warpPerspective(img_ov, H, (width, height))
     plt.imshow(imrightReg ),plt.show()
 
-
-
-
-    # img_shape = np.shape(imgside)
-
-    # img_ov2= np.zeros(img_shape)
-    # for i in range(img_shape[0]):
-    #     for j in range(img_shape[1]):
-    #         xy = [[i],[j],[1]]
-    #         # xy=np.asarray(xy)
-    #         # xy = 
-    #         xy_scaled = np.matmul(scale_matrix,xy) 
-
-    #         xy_scaled=xy_scaled/xy_scaled[2][0]
-    #         if int(xy_scaled[0][0])<img_shape[1] and int(xy_scaled[1][0])<img_shape[0]:
-    #             img_ov2[int(xy_scaled[0][0]),int(xy_scaled[1][0])] = imrightReg[i,j]
     imgside = imgside[:,:-2,:]
     imrightReg = imrightReg[:-2,:,:]
 
-    # scale_matrix2 = np.array([[0.3,0,180],
-    #                         [0,0.2,170],
-    #                         [0,0,1]])
-
     dst2 = cv2.addWeighted(imgside, alpha, imrightReg , beta, 0.0)
     dst2 = np.uint8(alpha*(imgside)+beta*(imrightReg ))
-
-
-    # img_ov2=transform_img(imgside,imrightReg,scale_matrix2)
-    # img_ov2 = img_ov2[:-2,:,:]
-
-    # img_ov2 = img_ov2.astype(np.uint8)
-    # dst2 = cv2.addWeighted(imgside, alpha, img_ov2, beta, 0.0)
-    # dst2 = np.uint8(alpha*(imgside)+beta*(img_ov2))
-    # # plt.imshow( dst), plt.show()
-    # # dst2= cv2.cvtColor(dst2, cv2.COLOR_BGR2RGB)
 
     plt.imshow(dst2 ),plt.show()
 
