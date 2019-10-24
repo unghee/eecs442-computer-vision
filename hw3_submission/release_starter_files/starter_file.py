@@ -162,7 +162,7 @@ def stitchimage(imgleft, imgright):
     XY_train = np.asarray([kp2[matches[i].trainIdx].pt for i in range(len(matches))])
 
     sampled_stack = np.zeros((1,4))
-    numTrials = 50
+    numTrials = 100
 
     bestLine, bestCount = None, -1 
 
@@ -278,10 +278,10 @@ def transform_img(imgbase,img,mat):
 
 if __name__ == "__main__":
     # Problem 1
-    # p1();
+    p1();
 
     # Problem 2
-    # p2('p2/uttower_left.jpg', 'p2/uttower_right.jpg', 'uttower')
+    p2('p2/uttower_left.jpg', 'p2/uttower_right.jpg', 'uttower')
     # p2('p2/bbb_left.jpg', 'p2/bbb_right.jpg', 'bbb')
 
     # Problem 3
@@ -322,7 +322,7 @@ if __name__ == "__main__":
     save_fig('./' + 'bbb_front_ov' + '.jpg', dst)
 
 
-    H=stitchimage(imgleft,imgside)
+    H, out=stitchimage(imgleft,imgside)
     print('H',H)
 
     height, width, channels = img_ov.shape
@@ -337,7 +337,7 @@ if __name__ == "__main__":
 
     plt.imshow(dst2 ),plt.show()
 
-    save_fig('./' + 'bbb_side_ov' + '.jpg', dst2)
+    save_fig('bbb_side_ov' + '.jpg', dst2)
 
 
 
