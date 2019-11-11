@@ -1,0 +1,89 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+%\ifcvprfinal\pagestyle{empty}\fi
+\setcounter{page}{4321}
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{\LaTeX\ Author Guidelines for CVPR Proceedings}
+
+\author{First Author\\
+Institution1\\
+Institution1 address\\
+{\tt\small firstauthor@i1.org}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+Second Author\\
+Institution2\\
+First line of institution2 address\\
+{\tt\small secondauthor@i2.org}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+   Vision sensors (i.e., RGDB camera) and computer vision technology have been a core equipment for developing autonomous robotic system. A recent success in deep learning and access to large amount image/video data enabled to foster the usage of computer vision in robotics. However, the applications have been mostly focused on independent robotic system where humans are not part of a control system (e.g., manipulators, quadrapeds, autonomous vehicles). There have been some works on implementing computer vision for wearable robots; however, they are mostly proof-of-concept researches which do not involve robots. In addition, vision sensors have only used for providing supplementary information for detecting wearers activities or environment, not as a direct control strategy. In this work, we propose to use an existing work of ego-pose estimation for controlling a bionic leg. The output of this real-time computer vision framework estimates complex activites of wearer's pose, which will be used as direct control input to the wearable robot. This end-to-end pipeline from vision to control will demonstrate the potential of using computer vision system in assistive devices.  
+\end{abstract}
+
+%%%%%%%%% BODY TEXT
+\section{Introduction}
+Applying computer vision to robotics system has been active area of research in robotics (CITE). Furthermore, recent gain in popularity of reinforcement learning and deep learning boosted this research area (CITE). However, most of the applications using vision have been independent robotic system which do not involve human body as wearable robots. Using comptuer vision for wearable robots such as exoskeleton and robotic prosthesis is relatively unexplored area. There have been reseaches on using vision for wearble robots, but most of them were limited to providing supplementary information about environment or wearer, but not as a direct control methodolgy. In addition, many of the high-level control strategies developed for wearable robots uses classification information from features extracted from the sensor to classify their control inputs on each classes (i.e., activities). This confines the controllers to operate within the limited pre-defined classes which hinders the usage of these robots outside of labs.
+
+In this work, we propose to develop a closed loop control framework using an existing work of ego-pose estimation as a direct control input. This approach will allow the bionic leg to perform unbouned activities by estimating the wearers pose. To our knowledge, this will be the first time to implement ego-pose estimation to control a bionic leg system. For this project, we will validate the system by testing it offline, but we seek to extend this control system in real-time as a future work.
+
+%-------------------------------------------------------------------------
+\subsection{The Open-source Bionic Leg}
+For this project, we will use a robotic system as a platform to test our ego-pose estimation pipeline, instead of Mujoco Simulation framework which was used in the original work. We will use a powered prosthesis named as 'the Open-source Bionic Leg (OSL)', developed by Neurobionics Lab at the University of Michigan. The OSL is a scalable robotic knee/ankle prosthesis intended to facilitate ivestigations of different control strategies. This common hardware platform, which is developed to lower the barriers for robotic control researchers, reduces a substantial level of time and financial resources by streamlining the development process of robotic leg prosthesis. . The OSL includes prosthesis hardware, sensors, low-level control software, and an API whcih provides frendly user interface to control the leg using high-level computer programming languages such as python, C/C++ (CITE OSL PAPER). This design objective of OSL's enables us to test our pose-estimation and control pipeline easily within the timeline, which is why we chose the OSL as a robot platform for our project.
+
+\subsection{Novelty}
+
+
+
+
+
+%-------------------------------------------------------------------------
+
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=1\linewidth]{osl.png}
+	\end{center}
+	\caption{Major components of the OSL: (A) proximal pyramid, knee; (B)3rd stage output pulley, knee; (C) knee joint; (D) 3rd stage belt, knee; (E) 2nd stage output pulley (coupled to 3rd stage input pulley), knee; (F) 1st stage output pulley, knee; (G) 2nd stage belt, knee; (H) 2nd stage input pulley, knee; (I) 1st stage input pulley, knee; (J) 1st stage belt, knee; (K) Dephy actuator; (L) distal pyramid, knee; (M) proximal pyramid, ankle; (N) SRI load cell; (O) 2nd stage output pulley, ankle; (P) 2nd stage belt, (ankle); (Q) 1st stage input pulley, ankle; (R) linkage coupler; (S) 1st stage belt, ankle; (T) 1st stage output pulley (coupled to 2nd stage input pulley), ankle; (U) ankle joint; (V) linkage rocker and foot attachment; (W) Ossur LP Vari-Flex foot. The ankle's 4-bar linkage is highlighted. For full characteriztion information please refer to (CITE XX) }
+	\label{fig:long}
+	\label{fig:onecol}
+\end{figure}
+
+%------------------------------------------------------------------------
+
+{\small
+\bibliographystyle{ieee_fullname}
+\bibliography{egbib}
+}
+
+\end{document}
