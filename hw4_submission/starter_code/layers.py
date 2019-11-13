@@ -80,7 +80,8 @@ def relu_forward(x):
     #     out = np.zeros(np.shape(x))
     #     out =0
 
-    out = np.array([max(0,i) for i in x])
+    # out = np.array([max(0,i) for i in x])
+    out = np.maximum(0,x)
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -103,14 +104,18 @@ def relu_backward(dout, cache):
     ###########################################################################
     # TODO: Implement the ReLU backward pass.                                 #
     ###########################################################################
-    dx = np.zeros(np.shape(x))
-    for i, j in enumerate(x):
-        if j>=0:
-            dx[i] = 1
-        else:
-            dx[i] = 0
+    # dx = np.zeros(np.shape(x))
+    # for i, j in enumerate(x):
+    #     if j>=0:
+    #         dx[i] = 1
+    #     else:
+    #         dx[i] = 0
     # dx = np.matmul(dout,dx)  
-    dx = dout*dx      
+    x=np.maximum(0,x)
+    x[x>0]= 1
+
+    # dx = dout*dx      
+    dx = dout*x    
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -164,26 +169,52 @@ def softmax_loss(x, y):
     ###########################################################################
    loss = 0 
    dx = 0
-   sumar =np.sum(np.exp(x),axis=1)
+
+   N= np.shape(x)
+
+   # if len(N)==1:
+   #  N = N[0]
+   #  max_arr = np.max(x)
+   #  sumar =np.sum(np.exp(x-max_arr))
+   #  yi = np.exp(x-max_arr)/sumar
+
+   #  loss = - np.log(yi[y[0]])
+   #  # loss = 1/N*loss
+   #  # m = y.shape[0]
+   #  yi[y] = yi[y]-1
+   #  # yi = yi
+   #  dx = yi
+   # else:
+   N = N[0]
+   max_arr = np.max(x,axis=1)
+   max_arr = max_arr[:,None]
+   sumar =np.sum(np.exp(x-max_arr),axis=1)
    sumar = sumar[:,None]
-   yi = np.exp(x)/sumar
-   N,C = np.shape(x)
-   i_arr=np.arange(C)
-   # loss=-np.sum([i_arr==y]*np.log(yi))
-   loss_arr = []
+   yi = np.exp(x-max_arr)/sumar
    for i in range(N):
-    # for j in range(C):
     loss += - np.log(yi[i][y[i]])
-   #  # for j in range(C):
-   #      # if i == y[i] and yi[i][j] != 0:
-   #      if i == y[i]:
-   #          # loss += - np.log(yi[i][j])
-   #          loss = - np.sum(np.log(yi[i]))
-    # loss_arr.append(loss)
-    # loss = 0
-   
-   # loss = np.sum(loss_arr)
    loss = 1/N*loss
+   m = y.shape[0]
+   yi[range(m),y] = yi[range(m),y]-1
+   yi = yi/m
+   dx = yi
+   # sumar =np.sum(np.exp(x),axis=1)
+   # sumar =np.sum(np.exp(x-max_arr),axis=1)
+
+   # sumar = sumar[:,None]
+   # yi = np.exp(x)/sumar
+   # yi = np.exp(x-max_arr)/sumar
+
+   
+
+
+   # loss = 1/N*loss
+
+   # m = y.shape[0]
+   # yi[range(m),y] = yi[range(m),y]-1
+   # yi = yi/m
+   # dx = yi
+
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################

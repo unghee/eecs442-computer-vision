@@ -1,5 +1,6 @@
 import numpy as np
 from softmax import SoftmaxClassifier
+import matplotlib.pyplot as plt
 
 def unpickle(file):
     import pickle
@@ -133,7 +134,7 @@ def trainNetwork(model, data, **kwargs):
     iterations_per_epoch = max(num_train // batch_size, 1)
     num_iterations = num_epochs * iterations_per_epoch
     
-
+    # data_list=[]
     
     for t in range(num_iterations):
         # Make a minibatch of training data
@@ -176,6 +177,8 @@ def trainNetwork(model, data, **kwargs):
             if verbose:
                 print('(Epoch %d / %d) train acc: %f; val_acc: %f' % (
                        epoch, num_epochs, train_acc, val_acc))
+                # curr_list = [epoch,train_acc,val_acc]
+                # data_list.append(curr_list)
 
             # Keep track of the best model
             if val_acc > best_val_acc:
@@ -191,11 +194,30 @@ def trainNetwork(model, data, **kwargs):
 def train():
     # load data
     data = load_cifar10() 
+    mean_arr = np.mean(data['X_train'],axis=1)
+    mean_arr = mean_arr[:,None]
+    std_arr=np.std(data['X_train'],axis=1) 
+    std_arr = std_arr[:,None]
+
+    data['X_train']=(data['X_train']-mean_arr)/std_arr
+    mean_arr = np.mean(data['X_val'],axis=1)
+    mean_arr = mean_arr[:,None]
+    std_arr=np.std(data['X_val'],axis=1) 
+    std_arr = std_arr[:,None]
+
+    data['X_val']=(data['X_val']-mean_arr)/std_arr
+
+
+
     train_data = { k: data[k] for k in ['X_train', 'y_train', 
                                         'X_val', 'y_val']}
     
+                                       
+
+
     # initialize model
-    model = SoftmaxClassifier(hidden_dim = 300)
+    model = SoftmaxClassifier(hidden_dim = 200)
+    # model = SoftmaxClassifier(hidden_dim = None)
       
     # start training    
     
@@ -203,9 +225,14 @@ def train():
     # TODO: Set up model hyperparameters                                  #
     #######################################################################
     model, train_acc_history, val_acc_history = trainNetwork(
-        model, train_data, learning_rate = 5e-3,
-        lr_decay=0.9, num_epochs=20, 
+        model, train_data, learning_rate = 2e-2 ,#5e-3,
+        lr_decay=0.4, num_epochs=30, 
         batch_size=128, print_every=1000)
+
+    # model, train_acc_history, val_acc_history = trainNetwork(
+    #     model, train_data, learning_rate = 3e-1 ,#5e-3,
+    #     lr_decay=0.7, num_epochs=10, 
+    #     batch_size=128, print_every=1000)    # 0.5026 !for hidden
     #######################################################################
     #                         END OF YOUR CODE                            #
     #######################################################################
@@ -215,9 +242,18 @@ def train():
     acc = testNetwork(model, data['X_test'], data['y_test'])
     print("Test accuracy: {}".format(acc))
 
+    plt.plot(train_acc_history,label='train accuracy')
+    plt.plot(val_acc_history,label='vaidation accuracy')
+    plt.xlabel('iteration')
+    plt.ylabel('accuracy')
+    plt.legend()
+    plt.show()
     #######################################################################
     # Save your model with model.save(filepath) once you finish training  #
     #######################################################################
+    # model.save('/Users/ungheelee/codes/eecs442-computer-vision/hw4_submission/starter_code/model_hidden')
+
+
 
 if __name__=="__main__":
     train()
