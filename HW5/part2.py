@@ -30,11 +30,8 @@ FASHION_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize([0.2859], [0.3530])
 ])
-# MNIST_val = Subset(MNIST_train, range(50000,60000))
 
-FASHION_trainval = datasets.FashionMNIST('.', download=True, train=True, transform=FASHION_transform)
 FASHION_train = datasets.FashionMNIST('.', download=True, train=True, transform=MNIST_transform)
-# FASHION_val = Subset(FASHION_trainval, range(50000,60000))
 FASHION_test = datasets.FashionMNIST('.', download=True, train=False, transform=FASHION_transform)
 
 class GridDataset(Dataset):
@@ -114,9 +111,6 @@ class Network(nn.Module):
     
 device = "cuda" if torch.cuda.is_available() else "cpu"
 trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
-# valloader = DataLoader(valset, batch_size=64, shuffle=True)
-valid_idx = [ i for i in range(30000,40000)]
-valloader = DataLoader(trainset, batch_size=64, shuffle=False, sampler=SubsetRandomSampler(valid_idx))
 testloader = DataLoader(testset, batch_size=64, shuffle=False)
 model = Network().to(device)
 criterion = nn.CrossEntropyLoss()
@@ -126,7 +120,7 @@ num_epoch = 10 # TODO: Choose an appropriate number of epochs
 loss_history = []
 
 
-def train(model, loader, num_epoch = 1): # Train the model
+def train(model, loader, num_epoch = 10): # Train the model
     print("Start training...")
     model.train() # Set the model to training mode
     for i in range(num_epoch):
@@ -140,6 +134,7 @@ def train(model, loader, num_epoch = 1): # Train the model
             running_loss.append(loss.item())
             loss.backward() # Backprop gradients to all tensors in the network
             optimizer.step() # Update trainable weights
+            loss_history.append(np.mean(running_loss))
         print("Epoch {} loss:{}".format(i+1,np.mean(running_loss))) # Print the average loss for this epoch
     print("Done!")
 
@@ -175,8 +170,6 @@ def evaluate(model, loader): # Evaluate accuracy on validation / test set
 
 train(model, trainloader)
 
-print("Evaluate on validation set...")
-evaluate(model, valloader)
 print("Evaluate on test set")
 a,vis_idx,vis_label=evaluate(model, testloader)
 
@@ -232,5 +225,18 @@ fig.savefig('classes.jpg')
 plt.imshow(output_vis[vis_label], vmin=0, vmax=1)
 plt.colorbar()
 plt.show()
+
+
+
+fig=plt.plot(loss_history,label='train loss')
+    # plt.plot(val_acc_history,label='vaidation accuracy')
+plt.xlabel('iteration')
+plt.ylabel('loss')
+plt.legend()
+plt.show()
+
+
+
+
 
 
