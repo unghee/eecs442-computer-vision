@@ -17,6 +17,8 @@ from torch import optim
 import torch.nn.functional as F
 from torchvision import datasets, transforms
 from torch.utils.data import Dataset, Subset, DataLoader, random_split
+from torch.utils.data.sampler import SubsetRandomSampler
+
 
 MNIST_transform = transforms.Compose([
     transforms.ToTensor(),
@@ -113,7 +115,8 @@ class Network(nn.Module):
 device = "cuda" if torch.cuda.is_available() else "cpu"
 trainloader = DataLoader(trainset, batch_size=64, shuffle=True)
 # valloader = DataLoader(valset, batch_size=64, shuffle=True)
-valloader = DataLoader(trainset, batch_size=64, shuffle=True, sampler=SubsetRandomSampler(50000,60000))
+valid_idx = [ i for i in range(30000,40000)]
+valloader = DataLoader(trainset, batch_size=64, shuffle=False, sampler=SubsetRandomSampler(valid_idx))
 testloader = DataLoader(testset, batch_size=64, shuffle=False)
 model = Network().to(device)
 criterion = nn.CrossEntropyLoss()
@@ -123,7 +126,7 @@ num_epoch = 10 # TODO: Choose an appropriate number of epochs
 loss_history = []
 
 
-def train(model, loader, num_epoch = 10): # Train the model
+def train(model, loader, num_epoch = 1): # Train the model
     print("Start training...")
     model.train() # Set the model to training mode
     for i in range(num_epoch):
