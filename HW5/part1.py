@@ -78,9 +78,12 @@ criterion = nn.CrossEntropyLoss() # Specify the loss layer
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4) # Specify optimizer and assign trainable parameters to it, weight_decay is L2 regularization strength
 num_epoch = 20
 
+
 # TODO: Choose an appropriate number of training epochs
 
 def train(model, loader, num_epoch = 20): # Train the model
+    loss_history=[]
+    val_history=[]
     print("Start training...")
     model.train() # Set the model to training mode
     for i in range(num_epoch):
@@ -94,8 +97,12 @@ def train(model, loader, num_epoch = 20): # Train the model
             running_loss.append(loss.item())
             loss.backward() # Backprop gradients to all tensors in the network
             optimizer.step() # Update trainable weights
-        print("Epoch {} loss:{}".format(i+1,np.mean(running_loss))) # Print the average loss for this epoch
+            loss_history.append(np.mean(running_loss))
+        val_acc = evaluate(model, valloader)
+        val_history.append(val_acc)
+        print("Epoch {} loss:{} val_acc:{}".format(i+1,np.mean(running_loss),val_acc)) # Print the average loss for this epoch
     print("Done!")
+    return loss_history, val_history
 
 def evaluate(model, loader): # Evaluate accuracy on validation / test set
     model.eval() # Set the model to evaluation mode
@@ -110,9 +117,30 @@ def evaluate(model, loader): # Evaluate accuracy on validation / test set
     print("Evaluation accuracy: {}".format(acc))
     return acc
     
-train(model, trainloader, num_epoch)
+loss_history, val_history =train(model, trainloader, num_epoch)
 print("Evaluate on validation set...")
 evaluate(model, valloader)
 print("Evaluate on test set")
 evaluate(model, testloader)
+
+
+fig =plt.figure()
+plt.plot(loss_history,label='train loss')
+plt.xlabel('iteration')
+plt.ylabel('loss')
+plt.legend()
+plt.show()
+fig.savefig('train_loss.jpg')
+
+fig =plt.figure()
+plt.plot(val_history,label='vaidation accuracy')
+plt.xlabel('epoch')
+plt.ylabel('accuracy')
+list_idx = [ i for i in range(20)]
+plt.xticks(np.array(list_idx))
+plt.legend()
+plt.show()
+fig.savefig('val_acc.jpg')
+
+
 
