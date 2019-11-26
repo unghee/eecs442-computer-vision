@@ -76,7 +76,7 @@ model = Network().to(device)
 criterion = nn.CrossEntropyLoss() # Specify the loss layer
 # TODO: Modify the line below, experiment with different optimizers and parameters (such as learning rate)
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4) # Specify optimizer and assign trainable parameters to it, weight_decay is L2 regularization strength
-num_epoch = 5
+num_epoch = 20
 
 
 # TODO: Choose an appropriate number of training epochs

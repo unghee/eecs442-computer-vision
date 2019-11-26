@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, models, transforms
 from tqdm import tqdm
 
-from datasetcolab import FacadeDataset
+from dataset import FacadeDataset
 
 N_CLASS=5
 
