@@ -221,6 +221,8 @@ def get_result(testloader, net, device, folder='output_train'):
 
 def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    print('GPU USED?',torch.cuda.is_available())
     # TODO change data_range to include all train/evaluation/test data.
     # TODO adjust batch_size.
     train_data = FacadeDataset(flag='train', data_range=(0,885), onehot=False)
@@ -245,7 +247,7 @@ def main():
 
     test(train_loader, net, criterion, device)
     print('\nStart training')
-    for epoch in range(5): #TODO decide epochs
+    for epoch in range(10): #TODO decide epochs
         print('-----------------Epoch = %d-----------------' % (epoch+1))
         train_loss=train(train_loader, net, criterion, optimizer, device, epoch+1)
         # TODO create your evaluation set, load the evaluation set and test on evaluation set
@@ -268,21 +270,22 @@ def main():
 
     fig =plt.figure()
     plt.plot(train_loss_history,label='train loss')
-    plt.xlabel('epoch')
-    plt.ylabel('loss')
-    plt.legend()
-    plt.show()
-    fig.savefig('train_loss.jpg')
-
-    fig =plt.figure()
     plt.plot(val_loss_history,label='vaidation loss')
     plt.xlabel('epoch')
     plt.ylabel('loss')
-    list_idx = [ i for i in range(20)]
-    plt.xticks(np.array(list_idx))
     plt.legend()
     plt.show()
-    fig.savefig('val_loss.jpg')
+    fig.savefig('loss.jpg')
+
+    # fig =plt.figure()
+    # plt.plot(val_loss_history,label='vaidation loss')
+    # plt.xlabel('epoch')
+    # plt.ylabel('loss')
+    # list_idx = [ i for i in range(10)]
+    # plt.xticks(np.array(list_idx))
+    # plt.legend()
+    # plt.show()
+    # fig.savefig('val_loss.jpg')
 
 if __name__ == "__main__":
     main()
