@@ -115,7 +115,7 @@ testloader = DataLoader(testset, batch_size=64, shuffle=False)
 model = Network().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001) # TODO: Experiment with different optimizer
-num_epoch = 10 # TODO: Choose an appropriate number of epochs
+num_epoch = 1 # TODO: Choose an appropriate number of epochs
 
 loss_history = []
 
