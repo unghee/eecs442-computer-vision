@@ -81,9 +81,10 @@ num_epoch = 20
 
 # TODO: Choose an appropriate number of training epochs
 
-def train(model, loader, num_epoch = 20): # Train the model
-    loss_history=[]
-    val_history=[]
+def train(model, loader, num_epoch = 2): # Train the model
+    val_loss_history=[]
+    val_acc_history=[]
+    train_loss_history=[]
     print("Start training...")
     model.train() # Set the model to training mode
     for i in range(num_epoch):
@@ -97,12 +98,14 @@ def train(model, loader, num_epoch = 20): # Train the model
             running_loss.append(loss.item())
             loss.backward() # Backprop gradients to all tensors in the network
             optimizer.step() # Update trainable weights
-            loss_history.append(np.mean(running_loss))
-        val_acc = evaluate(model, valloader)
-        val_history.append(val_acc)
+            # train_loss_history.append(np.mean(running_loss))
+        val_acc, val_loss = evaluate(model, valloader)
+        val_acc_history.append(val_acc)
+        val_loss_history.append(val_loss)
+        train_loss_history.append(np.mean(running_loss))
         print("Epoch {} loss:{} val_acc:{}".format(i+1,np.mean(running_loss),val_acc)) # Print the average loss for this epoch
     print("Done!")
-    return loss_history, val_history
+    return train_loss_history, val_loss_history, val_acc_history
 
 def evaluate(model, loader): # Evaluate accuracy on validation / test set
     model.eval() # Set the model to evaluation mode
@@ -113,11 +116,13 @@ def evaluate(model, loader): # Evaluate accuracy on validation / test set
             label = label.to(device)
             pred = model(batch)
             correct += (torch.argmax(pred,dim=1)==label).sum().item()
+            loss = criterion(pred, label)
+            running_loss = loss.item()
     acc = correct/len(loader.dataset)
     print("Evaluation accuracy: {}".format(acc))
-    return acc
+    return acc, running_loss
     
-loss_history, val_history =train(model, trainloader, num_epoch)
+train_loss_history, val_loss_history, val_acc_history =train(model, trainloader, num_epoch)
 print("Evaluate on validation set...")
 evaluate(model, valloader)
 print("Evaluate on test set")
@@ -125,16 +130,17 @@ evaluate(model, testloader)
 
 
 fig =plt.figure()
-plt.plot(loss_history,label='train loss')
-plt.xlabel('iteration')
+plt.plot(train_loss_history,label='train loss')
+plt.plot(val_loss_history,label='val loss')
+plt.xlabel('epochs')
 plt.ylabel('loss')
 plt.legend()
 plt.show()
 fig.savefig('train_loss.jpg')
 
 fig =plt.figure()
-plt.plot(val_history,label='vaidation accuracy')
-plt.xlabel('epoch')
+plt.plot(val_acc_history,label='vaidation accuracy')
+plt.xlabel('epochs')
 plt.ylabel('accuracy')
 list_idx = [ i for i in range(20)]
 plt.xticks(np.array(list_idx))
