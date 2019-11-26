@@ -76,7 +76,7 @@ model = Network().to(device)
 criterion = nn.CrossEntropyLoss() # Specify the loss layer
 # TODO: Modify the line below, experiment with different optimizers and parameters (such as learning rate)
 optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4) # Specify optimizer and assign trainable parameters to it, weight_decay is L2 regularization strength
-num_epoch = 20
+num_epoch = 5
 
 
 # TODO: Choose an appropriate number of training epochs
@@ -111,16 +111,18 @@ def evaluate(model, loader): # Evaluate accuracy on validation / test set
     model.eval() # Set the model to evaluation mode
     correct = 0
     with torch.no_grad(): # Do not calculate grident to speed up computation
+        running_loss = []
         for batch, label in tqdm(loader):
             batch = batch.to(device)
             label = label.to(device)
             pred = model(batch)
             correct += (torch.argmax(pred,dim=1)==label).sum().item()
             loss = criterion(pred, label)
-            running_loss = loss.item()
+            running_loss.append(loss.item())
+        final_loss=np.mean(running_loss)
     acc = correct/len(loader.dataset)
     print("Evaluation accuracy: {}".format(acc))
-    return acc, running_loss
+    return acc, final_loss
     
 train_loss_history, val_loss_history, val_acc_history =train(model, trainloader, num_epoch)
 print("Evaluate on validation set...")
