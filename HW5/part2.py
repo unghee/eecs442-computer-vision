@@ -120,7 +120,7 @@ num_epoch = 1 # TODO: Choose an appropriate number of epochs
 loss_history = []
 
 
-def train(model, loader, num_epoch = 10): # Train the model
+def train(model, loader, num_epoch = 1): # Train the model
     print("Start training...")
     model.train() # Set the model to training mode
     for i in range(num_epoch):
