@@ -232,7 +232,7 @@ def main():
     val_loader = DataLoader(val_data, batch_size=1)
 
 
-    test_data = FacadeDataset(flag='test_dev', data_range=(0,114), onehot=False)
+    test_data = FacadeDataset(flag='test_dev', data_range=(114,115), onehot=False)
     test_loader = DataLoader(test_data, batch_size=1)
     ap_data = FacadeDataset(flag='test_dev', data_range=(0,114), onehot=True)
     ap_loader = DataLoader(ap_data, batch_size=1)
@@ -247,7 +247,7 @@ def main():
 
     test(train_loader, net, criterion, device)
     print('\nStart training')
-    for epoch in range(10): #TODO decide epochs
+    for epoch in range(5): #TODO decide epochs
         print('-----------------Epoch = %d-----------------' % (epoch+1))
         train_loss=train(train_loader, net, criterion, optimizer, device, epoch+1)
         # TODO create your evaluation set, load the evaluation set and test on evaluation set
@@ -276,6 +276,10 @@ def main():
     plt.legend()
     plt.show()
     fig.savefig('loss.jpg')
+
+
+    # image_bbb
+    # output = net(images)[0].cpu().numpy()
 
     # fig =plt.figure()
     # plt.plot(val_loss_history,label='vaidation loss')
